@@ -10,7 +10,7 @@ Copyright (C) 2016  @LucentW - Casa
 Trovate aggiornamenti sul bot su [questa pubblicazione Medium](http://medium.com/piccoliprogetti).
 ## Utilizzo del bot
 Non serve neanche avviare il bot con ```/start```. 
-È sempre possibile richiamarlo inline semplicemente scrivendo ```@dizionariobot Lemma da cercare```.
+È sempre possibile richiamarlo inline semplicemente scrivendo ```@DizionarioRobot Lemma da cercare```.
 ## Perchè questo bot?
 Non abbiamo trovato alcun bot che funge da dizionario in lingua italiana. Per questo lo consideriamo utile. Wikizionario è sempre in crescita e si modifica sempre. Potete contrbuire su [it.wiktionary.org](https://it.wiktionary.org/wiki/Pagina_principale)
 ### Altri progetti
