@@ -11,7 +11,7 @@ require 'json'
 ## CONFIGURATION START ##
 token = 'INSERT_BOT_TOKEN_HERE' # Telegram bot API token
 # api_ep = 'https://wikigram.it/api.php' # Wikigram Api Sample
-api_ep = 'https://it.wikipedia.org/w/api.php'# Mediawiki API endpoint
+api_ep = 'https://it.wiktionary.org/w/api.php'# Mediawiki API endpoint
 # page_uri = "#{api_ep[0..-8]}/" # Example: URL pattern for Wikipedia
 page_uri = "#{api_ep[0..-10]}wiki/" # Base URL for pages
 ## CONFIGURATION END ##
