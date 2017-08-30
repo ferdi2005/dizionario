@@ -1,4 +1,4 @@
-# DizionarioRobot ![Telegram @dizionariorobot](https://img.shields.io/badge/Telegram-%40DizionarioRobot-red.svg) ![Stato:Attivo](https://img.shields.io/badge/stato-attivo-green.svg) ![Release=v0.9](https://img.shields.io/badge/release-v0.9-red.svg)
+# DizionarioRobot ![Telegram @dizionariorobot](https://img.shields.io/badge/Telegram-%40DizionarioRobot-verde.svg) ![Stato:Attivo](https://img.shields.io/badge/stato-attivo-green.svg) ![Release=v0.9](https://img.shields.io/badge/release-v0.9-red.svg) ![Stato=Beta](https://img.shields.io/badge/Stato-Beta-yellow.svg)
 *Il bot per le ricerche su Wikipedia è @enciclobot* [Link Ufficiale](https://telegram.me/enciclobot)
 
 Questo bot consente di ricavare lemmi di Wikizionario - il dizionario libero, in modalità Inline da Telegram.
