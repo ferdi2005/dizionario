@@ -6,6 +6,8 @@ Il bot è stato creato da @ferdi2005 (ed è hostato su proprio server) per [il n
 Il bot è basato su codice originale di @LucentW ed è di sua proprietà. Il codice è stato modificato per essere adattato.
 
 Copyright (C) 2016  @LucentW - Casa
+
+Trovi una guida per l'installazione [in questa pagina](installazione.md).
 ## Aggiornamenti sul bot
 Trovate aggiornamenti sul bot su [questa pubblicazione Medium](http://medium.com/piccoliprogetti).
 ## Utilizzo del bot
