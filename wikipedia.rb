@@ -54,7 +54,7 @@ Telegram::Bot::Client.run(token) do |bot|
             results << Telegram::Bot::Types::InlineQueryResultArticle.new(
               id: counter,
               title: curres["title"],
-              input_message_content: Telegram::Bot::Types::InputTextMessageContent.new(message_text: "Significato di #{norm_title}:#{page["extract"]}"),
+              input_message_content: Telegram::Bot::Types::InputTextMessageContent.new(message_text: "Significato di #{norm_title}: #{page["extract"]}"),
               description: "#{page["extract"][0..64]}...",
               reply_markup: Telegram::Bot::Types::InlineKeyboardMarkup.new(
                 inline_keyboard: [Telegram::Bot::Types::InlineKeyboardButton.new(
