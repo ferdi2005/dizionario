@@ -33,4 +33,4 @@ Finalmente possiamo far partire il bot! Diamo `sudo ruby wikipedia.rb`ed il nost
 
 Sotto il comando (ricordate di mantenere sempre aperta la connessione SSH se volete che il bot funzioni) usciranno tutte le query effettuate (e solo le query, non i dati di chi le fa).
 
-**Attenzione!** Il bot, una volta chiusa la connessione, viene fermata. Sto lavorando ad una guida che spieghi come mantenere il bot attivo in background (io stesso sto studiando per farlo).
+**Attenzione!** Il bot, una volta chiusa la connessione, viene fermato. Se vogliamo continuare a mantenere attivo il bot possiamo usare systemd oppure, scelta consigliata, `screens` o `tmux` semplicemente digitando uno dei due si aprirà un terminale nel quale potremo digitare il comando e quello rimarrà in esecuzione continua. Ci basterà chiudere la sessione SSH.
