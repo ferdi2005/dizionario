@@ -58,7 +58,7 @@ Telegram::Bot::Client.run(token) do |bot|
               description: "#{page["extract"][0..64]}...",
               reply_markup: Telegram::Bot::Types::InlineKeyboardMarkup.new(
                 inline_keyboard: [Telegram::Bot::Types::InlineKeyboardButton.new(
-                  text: "Leggi ora la definizione", url: "#{page_uri}#{norm_title}"
+                  text: "Leggi ora la definizione di #{message.query}", url: "#{page_uri}#{norm_title}"
                 )]
               )
             )
