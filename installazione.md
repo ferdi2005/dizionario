@@ -1,11 +1,5 @@
 # Procedura di installazione del bot su una VPS
 ## Ubuntu
-### Requisiti minimi
-* VPS Ubuntu 14.04+
-* 1GB di RAM
-* 0,5 vCore
-
-_La procedura di installazione è valida per una VPS vuota, senza Ruby e gems varie. Se si ha già Ruby saltare le operazioni preliminari_
 ### Operazioni preliminari
 #### Sudoers
 Se l'utente da cui si sta installando il bot non è già con permessi amministrativi dare da root o equivalente: 
@@ -19,6 +13,8 @@ Una volta compiute le operazioni preliminari, installiamo le gems necessarie al 
 Partiamo con `$ sudo gem install mediawiki_api` per installare la gemma che consente la compatibilità con mediawiki.
 
 Diamo anche il comando `$ sudo gem install telegram-bot-ruby` che installerà la gemma che consente di sfruttare le api di Telegram.
+
+Infine `$ sudo gem install daemons`.
 ### Installazione del bot
 Una volta preparato il sistema per eseguire il bot, lo cloniamo nella VPS. Se git non è installato (cosa che raramente capita) diamo `$ sudo apt-get install git`, altrimenti procediamo normalmente.
 
@@ -29,8 +25,4 @@ In nano modifichiamo (spostandoci con le frecce) il token del bot inserendo quel
 #### Impostazione dell'inline su BotFather
 Su BotFather digitiamo `/setinline` e impostiamo il nostro bot per ricevere comandi inline (seguendo la procedura a schermo)
 #### Si parte!
-Finalmente possiamo far partire il bot! Diamo `sudo ruby wikipedia.rb`ed il nostro bot incomincerà a processare le query inline dirette alle API della wiki che usiamo.
-
-Sotto il comando (ricordate di mantenere sempre aperta la connessione SSH se volete che il bot funzioni) usciranno tutte le query effettuate (e solo le query, non i dati di chi le fa).
-
-**Attenzione!** Il bot, una volta chiusa la connessione, viene fermato. Se vogliamo continuare a mantenere attivo il bot possiamo usare systemd oppure, scelta consigliata, `screens` o `tmux` semplicemente digitando uno dei due si aprirà un terminale nel quale potremo digitare il comando e quello rimarrà in esecuzione continua. Ci basterà chiudere la sessione SSH.
+Finalmente possiamo far partire il bot! Diamo `sudo ruby daemon.rb start`ed il nostro bot incomincerà a processare le query inline dirette alle API della wiki che usiamo e non si fermerà mai!
