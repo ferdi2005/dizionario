@@ -1,3 +1,3 @@
 require 'daemons'
 
-Daemons.run('wikizionario.rb')
+Daemons.run('dizionario.rb')
