@@ -7,6 +7,8 @@ Se l'utente da cui si sta installando il bot non è già con permessi amministra
 `$ sudo adduser nomeutente sudo`
 #### Ruby
 Installiamo Ruby (se non già presente) con `$ sudo apt install ruby`. Procediamo ad aggiornare i pacchetti con `$ sudo apt upgrade`
+
+In caso di problemi, leggere https://phabricator.wikimedia.org/T226901 (in particolare le istruzioni su `sudo apt install ruby-dev`)
 ### Installazione delle gems
 Una volta compiute le operazioni preliminari, installiamo le gems necessarie al funzionamento del bot.
 
