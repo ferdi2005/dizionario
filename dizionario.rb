@@ -45,7 +45,7 @@ Telegram::Bot::Client.run(token) do |bot|
         counter = 1
 
         hash_search.each do |curres|
-          cur_extract = mw.query(prop: "extracts", exchars: 300, exsectionformat: "plain", explaintext: "", redirects: "", exintro: true, titles: curres["title"])
+          cur_extract = mw.query(prop: "extracts", exchars: 1000, exsectionformat: "plain", explaintext: "", redirects: "", exintro: true, titles: curres["title"])
 
           hash_extract = cur_extract.data["pages"]
           hash_extract.each do |_id, page|
