@@ -9,7 +9,6 @@
 require 'mediawiki_api'
 require 'telegram/bot'
 require 'json'
-require 'byebug'
 
 ## CONFIGURATION START ##
 token = 'INSERT_BOT_TOKEN_HERE' # Telegram bot API token
@@ -26,7 +25,7 @@ Telegram::Bot::Client.run(token) do |bot|
     when Telegram::Bot::Types::InlineQuery
       puts "Processing inline query -- #{message.query}"
 
-      if !message.query.empty?
+      if !message.query.empty? && message.query.length > 3
         query = message.query
         query_search = mw.query(list: "search", srsearch: query + ' hastemplate:"-it-"', srlimit: 5)
         hash_search = []
@@ -64,8 +63,6 @@ Telegram::Bot::Client.run(token) do |bot|
                 elsif ["Transitivo", "Intransitivo"].include?(s.match(/=+([\s\w\/]+)=+/)[1].strip.capitalize)
                   risultati.push("(#{s.match(/=+([\s\w\/]+)=+/)[1].strip.downcase})")
                 end
-              elsif s.match?(/==([\s\w\/])+==/) && s.match(/==([\s\w\/]+)==/)[1].strip.capitalize != "Italiano"
-                @stop = true
               end
 
               unless @stop
