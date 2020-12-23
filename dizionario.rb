@@ -26,7 +26,7 @@ Telegram::Bot::Client.run(token) do |bot|
       puts "Processing inline query -- #{message.query}"
 
       if !message.query.empty?
-        query_search = mw.query(list: "search", srsearch: message.query)
+        query_search = mw.query(list: "search", srsearch: message.query, srlimit: 50)
         hash_search = []
         query_search.data["search"].each do |result|
           hash_search << result
@@ -77,19 +77,18 @@ Telegram::Bot::Client.run(token) do |bot|
             results << Telegram::Bot::Types::InlineQueryResultArticle.new(
               id: counter,
               title: curres["title"],
-              input_message_content: Telegram::Bot::Types::InputTextMessageContent.new(message_text: description),
+              input_message_content: Telegram::Bot::Types::InputTextMessageContent.new(message_text: description, parse_mode: "html"),
               description: "#{description[0..64]}...",
               reply_markup: Telegram::Bot::Types::InlineKeyboardMarkup.new(
                 inline_keyboard: [Telegram::Bot::Types::InlineKeyboardButton.new(
-                  text: "Leggi ora la definizione di #{message.query}", url: "#{page_uri}#{norm_title}"
+                  text: "Leggi tutte le altre informazioni su #{message.query}", url: "#{page_uri}#{norm_title}"
                 )]
               )
             )
             counter = counter + 1
           end
         end
-
-        bot.api.answer_inline_query(inline_query_id: message.id, results: results) rescue puts "Errore nell'invio della risposta."
+        bot.api.answer_inline_query(inline_query_id: message.id, results: results)
       end
     end
   end
