@@ -9,6 +9,7 @@
 require 'mediawiki_api'
 require 'telegram/bot'
 require 'json'
+require 'byebug'
 
 ## CONFIGURATION START ##
 token = 'INSERT_BOT_TOKEN_HERE' # Telegram bot API token
@@ -17,7 +18,7 @@ page_uri = "#{api_ep[0..-10]}wiki/" # Base URL for pages
 ## CONFIGURATION END ##
 
 mw = MediawikiApi::Client.new api_ep
-bot_id = token.split(':').at(0).to_i
+# bot_id = token.split(':').at(0).to_i
 
 Telegram::Bot::Client.run(token) do |bot|
   bot.listen do |message|
@@ -26,7 +27,8 @@ Telegram::Bot::Client.run(token) do |bot|
       puts "Processing inline query -- #{message.query}"
 
       if !message.query.empty?
-        query_search = mw.query(list: "search", srsearch: message.query, srlimit: 50)
+        query = message.query
+        query_search = mw.query(list: "search", srsearch: query + ' hastemplate:"-it-"', srlimit: 5)
         hash_search = []
         query_search.data["search"].each do |result|
           hash_search << result
@@ -37,14 +39,13 @@ Telegram::Bot::Client.run(token) do |bot|
           results << Telegram::Bot::Types::InlineQueryResultArticle.new(
             id: 1,
             title: "Nessuna parola trovata.",
-            input_message_content: Telegram::Bot::Types::InputTextMessageContent.new(message_text: "Non c'è alcun risultato in Wikizionario!")
+            input_message_content: Telegram::Bot::Types::InputTextMessageContent.new(message_text: "Nessun risultato")
           )
         end
-
         counter = 1
 
         hash_search.each do |curres|
-          cur_extract = mw.query(prop: "extracts", exchars: 1000, explaintext: "1", exsectionformat: "wiki", exlimit: :max, titles: curres["title"])
+          cur_extract = mw.query(prop: "extracts", exchars: 1200, explaintext: "1", exsectionformat: "wiki", exlimit: :max, titles: curres["title"])
           
           hash_extract = cur_extract.data["pages"]
           hash_extract.each do |_id, page|
@@ -53,16 +54,18 @@ Telegram::Bot::Client.run(token) do |bot|
             risultati = []
 
             split.reject! { |r| r == ""}
-            
+
             split.each do |s|
               if s.match?(/=+([\s\w\/])+=+/)
-                if ["Sillabazione", "Pronuncia", "Citazione", "Etimologia / Derivazione", "Etimologia / derivazione", "Etimologia", "Derivazione", "Sinonimi", "Parole derivate", "Termini correlati", "Alterati", "Proverbi e modi di dire", "Traduzione", "Note / Riferimenti", "Altri progetti"].include?(s.match(/=+([\s\w\/]+)=+/)[1].strip.capitalize)
+                if ["Sillabazione", "Pronuncia", "Citazione", "Etimologia / Derivazione", "Etimologia / derivazione", "Etimologia", "Derivazione", "Sinonimi", "Contrari", "Parole derivate", "Termini correlati", "Alterati", "Proverbi e modi di dire", "Traduzione", "Note / Riferimenti", "Altri progetti", "Varianti"].include?(s.match(/=+([\s\w\/]+)=+/)[1].strip.capitalize)
                   @stop = true
                 elsif !["Italiano", "Transitivo", "Intransitivo"].include?(s.match(/=+([\s\w\/]+)=+/)[1].strip.capitalize)
                   risultati.push("<b>#{s.match(/=+([\s\w\/]+)=+/)[1].strip.capitalize}:</b>")
                 elsif ["Transitivo", "Intransitivo"].include?(s.match(/=+([\s\w\/]+)=+/)[1].strip.capitalize)
                   risultati.push("(#{s.match(/=+([\s\w\/]+)=+/)[1].strip.downcase})")
                 end
+              elsif s.match?(/==([\s\w\/])+==/) && s.match(/==([\s\w\/]+)==/)[1].strip.capitalize != "Italiano"
+                @stop = true
               end
 
               unless @stop
@@ -72,13 +75,15 @@ Telegram::Bot::Client.run(token) do |bot|
               end
             end
 
+            risultati.unshift("<i><b>#{curres["title"]}</b></i>")
+
             description = risultati.join("\n")
 
             results << Telegram::Bot::Types::InlineQueryResultArticle.new(
               id: counter,
               title: curres["title"],
               input_message_content: Telegram::Bot::Types::InputTextMessageContent.new(message_text: description, parse_mode: "html"),
-              description: "#{description[0..64]}...",
+              description: "#{description.gsub("<i><b>", "").gsub("</i></b>", "")[0..64]}...",
               reply_markup: Telegram::Bot::Types::InlineKeyboardMarkup.new(
                 inline_keyboard: [Telegram::Bot::Types::InlineKeyboardButton.new(
                   text: "Leggi tutte le altre informazioni su #{message.query}", url: "#{page_uri}#{norm_title}"
@@ -88,7 +93,7 @@ Telegram::Bot::Client.run(token) do |bot|
             counter = counter + 1
           end
         end
-        bot.api.answer_inline_query(inline_query_id: message.id, results: results)
+        bot.api.answer_inline_query(inline_query_id: message.id, results: results) rescue "Errore nel processare un messaggio"
       end
     end
   end
