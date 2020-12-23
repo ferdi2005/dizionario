@@ -67,7 +67,7 @@ Telegram::Bot::Client.run(token) do |bot|
 
               unless @stop
                 unless s.match?(/=+[\s\w\/]+=+/) || s.match?(page["title"])
-                  risultati.push("- " + s)
+                  risultati.push("- " + s + ";")
                 end
               end
             end
@@ -77,8 +77,8 @@ Telegram::Bot::Client.run(token) do |bot|
             results << Telegram::Bot::Types::InlineQueryResultArticle.new(
               id: counter,
               title: curres["title"],
-              input_message_content: Telegram::Bot::Types::InputTextMessageContent.new(message_text: "Significato di #{norm_title}: #{page["extract"]}"),
-              description: "#{page["extract"][0..64]}...",
+              input_message_content: Telegram::Bot::Types::InputTextMessageContent.new(message_text: description),
+              description: "#{description[0..64]}...",
               reply_markup: Telegram::Bot::Types::InlineKeyboardMarkup.new(
                 inline_keyboard: [Telegram::Bot::Types::InlineKeyboardButton.new(
                   text: "Leggi ora la definizione di #{message.query}", url: "#{page_uri}#{norm_title}"
@@ -89,7 +89,7 @@ Telegram::Bot::Client.run(token) do |bot|
           end
         end
 
-        bot.api.answer_inline_query(inline_query_id: message.id, results: results) rescue puts "Errore nella risposta."
+        bot.api.answer_inline_query(inline_query_id: message.id, results: results) rescue puts "Errore nell'invio della risposta."
       end
     end
   end
