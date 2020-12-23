@@ -95,6 +95,8 @@ Telegram::Bot::Client.run(token) do |bot|
         end
         bot.api.answer_inline_query(inline_query_id: message.id, results: results) rescue "Errore nel processare un messaggio"
       end
+      when Telegram::Bot::Types::Message
+        bot.api.send_message(chat_id: message.chat.id, text: "Ciao, tramite questo bot puoi risalire alla definizione delle parole tratta dal dizionario libero <a href='https://it.wiktionary.org/'>Wikizionario!</a> distribuito sotto la licenza libera <a href='https://creativecommons.org/licenses/by-sa/3.0/deed.it'>CC-BY-SA 3.0</a>. Puoi usarlo inline in ogni chat semplicemente scrivendo @dizionariorobot e poi la parola da cercare.")
     end
   end
 end
