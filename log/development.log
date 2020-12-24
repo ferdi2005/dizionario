@@ -28,3 +28,65 @@ ActionController::RoutingError (uninitialized constant HomeController):
   
 ActionController::RoutingError (uninitialized constant HomeController):
   
+Started GET "/" for 127.0.0.1 at 2020-12-24 17:56:09 +0100
+  
+ArgumentError (wrong number of arguments (given 1, expected 0)):
+  
+app/controllers/process_controller.rb:6:in `process'
+Started GET "/" for 127.0.0.1 at 2020-12-24 17:56:10 +0100
+  
+ArgumentError (wrong number of arguments (given 1, expected 0)):
+  
+app/controllers/process_controller.rb:6:in `process'
+Started GET "/" for 127.0.0.1 at 2020-12-24 17:57:24 +0100
+Processing by ProcessController#home as HTML
+  [1m[35m (22.8ms)[0m  [1m[34mSELECT COUNT(*) FROM "messages" WHERE "messages"."completed" = $1[0m  [["completed", true]]
+  ↳ app/controllers/process_controller.rb:4:in `home'
+  Rendering layout layouts/application.html.erb
+  Rendering process/home.html.erb within layouts/application
+  Rendered process/home.html.erb within layouts/application (Duration: 0.4ms | Allocations: 144)
+[Webpacker] Compiling...
+[Webpacker] Compiled all packs in /Users/ferdi2005/Codice/dizionario/public/packs
+[Webpacker] Hash: 415a948d492e21802f43
+Version: webpack 4.44.2
+Time: 1597ms
+Built at: 2020-12-24 17:57:28
+                                     Asset       Size       Chunks                         Chunk Names
+    js/application-d5a3c3b4dce84b5eb605.js    125 KiB  application  [emitted] [immutable]  application
+js/application-d5a3c3b4dce84b5eb605.js.map    139 KiB  application  [emitted] [dev]        application
+                             manifest.json  364 bytes               [emitted]              
+Entrypoint application = js/application-d5a3c3b4dce84b5eb605.js js/application-d5a3c3b4dce84b5eb605.js.map
+[./app/javascript/channels sync recursive _channel\.js$] ./app/javascript/channels sync _channel\.js$ 160 bytes {application} [built]
+[./app/javascript/channels/index.js] 211 bytes {application} [built]
+[./app/javascript/packs/application.js] 492 bytes {application} [built]
+[./node_modules/webpack/buildin/module.js] (webpack)/buildin/module.js 552 bytes {application} [built]
+    + 3 hidden modules
+
+  Rendered layout layouts/application.html.erb (Duration: 3471.8ms | Allocations: 18080)
+Completed 200 OK in 3512ms (Views: 3473.6ms | ActiveRecord: 24.7ms | Allocations: 23596)
+
+
+Started GET "/" for 127.0.0.1 at 2020-12-24 17:57:37 +0100
+Processing by ProcessController#home as HTML
+  [1m[35m (0.7ms)[0m  [1m[34mSELECT COUNT(*) FROM "messages" WHERE "messages"."completed" = $1[0m  [["completed", true]]
+  ↳ app/controllers/process_controller.rb:4:in `home'
+  Rendering layout layouts/application.html.erb
+  Rendering process/home.html.erb within layouts/application
+  Rendered process/home.html.erb within layouts/application (Duration: 0.3ms | Allocations: 145)
+[Webpacker] Everything's up-to-date. Nothing to do
+  Rendered layout layouts/application.html.erb (Duration: 6.9ms | Allocations: 4182)
+Completed 200 OK in 12ms (Views: 8.6ms | ActiveRecord: 0.7ms | Allocations: 6178)
+
+
+Started GET "/" for 127.0.0.1 at 2020-12-24 17:57:39 +0100
+Processing by ProcessController#home as HTML
+  [1m[35m (0.8ms)[0m  [1m[34mSELECT COUNT(*) FROM "messages" WHERE "messages"."completed" = $1[0m  [["completed", true]]
+  ↳ app/controllers/process_controller.rb:4:in `home'
+  Rendering layout layouts/application.html.erb
+  Rendering process/home.html.erb within layouts/application
+  Rendered process/home.html.erb within layouts/application (Duration: 0.1ms | Allocations: 41)
+[Webpacker] Everything's up-to-date. Nothing to do
+  Rendered layout layouts/application.html.erb (Duration: 8.4ms | Allocations: 4132)
+Completed 200 OK in 12ms (Views: 8.9ms | ActiveRecord: 0.8ms | Allocations: 5449)
+
+
