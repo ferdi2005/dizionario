@@ -15,10 +15,11 @@ class ProcessController < ApplicationController
         message = params[:message]
         unless message[:text].nil?
             text = message[:text]
-          else
+        else
             text = message[:captions]
-          end
-      
+        end
+
+      unless text.nil?
           case text
           when text.match?(/\/cerca(@dizionariorobot)?\s(\w+)/)
             query = text.match(/\/cerca(@dizionariorobot)?\s(\w+)/)[2]
@@ -75,6 +76,6 @@ class ProcessController < ApplicationController
             when text.match?(/\/start(@dizionariorobot)?/)
               bot.api.send_message(chat_id: message[:chat][:id], text: "Ciao, tramite questo bot puoi risalire alla definizione delle parole tratta dal dizionario libero <a href='https://it.wiktionary.org/'>Wikizionario!</a> distribuito sotto la licenza libera <a href='https://creativecommons.org/licenses/by-sa/3.0/deed.it'>CC-BY-SA 3.0</a>. Inseriscilo nella chat che preferisci o usalo qui e usando il comando /cerca e la parola che vuoi cercare. Segnala eventuali errori a @ferdi2005")
             end
-              
+        end
     end
 end
