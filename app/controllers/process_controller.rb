@@ -5,20 +5,21 @@ class ProcessController < ApplicationController
         @count = Message.where(completed: true).count
     end
     def processing
+    begin
         token = ENV['TOKEN']
         api_ep = 'https://it.wiktionary.org/w/api.php'# Mediawiki API endpoint
         page_uri = "#{api_ep[0..-10]}wiki/" # Base URL for pages
         ## CONFIGURATION END ##
         
         mw = MediawikiApi::Client.new api_ep
-
         message = params[:message]
         unless message[:text].nil?
             text = message[:text]
         else
             text = message[:captions]
         end
-
+        puts message
+        
       unless text.nil?
           case text
           when text.match?(/\/cerca(@dizionariorobot)?\s(\w+)/)
@@ -77,5 +78,8 @@ class ProcessController < ApplicationController
               bot.api.send_message(chat_id: message[:chat][:id], text: "Ciao, tramite questo bot puoi risalire alla definizione delle parole tratta dal dizionario libero <a href='https://it.wiktionary.org/'>Wikizionario!</a> distribuito sotto la licenza libera <a href='https://creativecommons.org/licenses/by-sa/3.0/deed.it'>CC-BY-SA 3.0</a>. Inseriscilo nella chat che preferisci o usalo qui e usando il comando /cerca e la parola che vuoi cercare. Segnala eventuali errori a @ferdi2005")
             end
         end
+    rescue => e
+        puts e
+    end
     end
 end

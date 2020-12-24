@@ -90,3 +90,28 @@ Processing by ProcessController#home as HTML
 Completed 200 OK in 12ms (Views: 8.9ms | ActiveRecord: 0.8ms | Allocations: 5449)
 
 
+Started GET "/process" for 127.0.0.1 at 2020-12-24 18:16:28 +0100
+  [1m[35m (0.9ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  
+ActionController::RoutingError (No route matches [GET] "/process"):
+  
+Started POST "/process" for 127.0.0.1 at 2020-12-24 18:17:04 +0100
+Processing by ProcessController#processing as HTML
+Started POST "/process" for 127.0.0.1 at 2020-12-24 18:18:21 +0100
+Completed 500 Internal Server Error in 76672ms (ActiveRecord: 0.0ms | Allocations: 228152)
+
+
+  
+SystemExit (exit):
+  
+(byebug):1:in `exit'
+(byebug):1:in `processing'
+app/controllers/process_controller.rb:15:in `processing'
+Processing by ProcessController#processing as HTML
+Completed 500 Internal Server Error in 12562ms (ActiveRecord: 0.0ms | Allocations: 164768)
+
+
+  
+NoMethodError (undefined method `[]' for nil:NilClass):
+  
+app/controllers/process_controller.rb:16:in `processing'
