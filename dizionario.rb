@@ -25,6 +25,8 @@ Telegram::Bot::Client.run(token) do |bot|
     else
       text = message.caption
     end
+  
+    next if text.nil?
 
     if text.match?(/\/cerca(@dizionariorobot)?\s(\w+)/)
       query = text.match(/\/cerca(@dizionariorobot)?\s(\w+)/)[2]
