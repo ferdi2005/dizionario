@@ -20,8 +20,7 @@ class ProcessController < ApplicationController
         ## CONFIGURATION END ##
         
         mw = MediawikiApi::Client.new api_ep
-          case text
-          when text.match?(/\/cerca(@dizionariorobot)?\s(\w+)/i)
+          if text.match?(/\/cerca(@dizionariorobot)?\s(\w+)/i)
             query = text.match(/\/cerca(@dizionariorobot)?\s(\w+)/i)[2]
             puts "Processing query -- #{query}"
             @message = Message.create(chat_id: message[:chat][:id], text: text, )
@@ -78,7 +77,7 @@ class ProcessController < ApplicationController
                       bot.api.send_message(chat_id: message[:chat][:id], text: description, parse_mode: "html", reply_markup: markup)
                   end
                 end
-            when text.match?(/\/start(@dizionariorobot)?/i)
+            elsif text.match?(/\/start(@dizionariorobot)?/i)
               bot.api.send_message(chat_id: message[:chat][:id], text: "Ciao, tramite questo bot puoi risalire alla definizione delle parole tratta dal dizionario libero <a href='https://it.wiktionary.org/'>Wikizionario!</a> distribuito sotto la licenza libera <a href='https://creativecommons.org/licenses/by-sa/3.0/deed.it'>CC-BY-SA 3.0</a>. Inseriscilo nella chat che preferisci o usalo qui e usando il comando /cerca e la parola che vuoi cercare. Segnala eventuali errori a @ferdi2005")
             end
     rescue => e
