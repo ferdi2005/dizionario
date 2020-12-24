@@ -8,7 +8,6 @@
 
 require 'mediawiki_api'
 require 'telegram/bot'
-require 'byebug'
 
 ## CONFIGURATION START ##
 token = 'INSERT_TOKEN_HERE' # Telegram bot API token
@@ -27,8 +26,8 @@ Telegram::Bot::Client.run(token) do |bot|
       text = message.caption
     end
 
-    if text.match?(/\/cerca(@dizionariorobot)?\s(\w+)/)
-      puts 'ok'
+    case text
+    when text.match?(/\/cerca(@dizionariorobot)?\s(\w+)/)
       query = text.match(/\/cerca(@dizionariorobot)?\s(\w+)/)[2]
       puts "Processing query -- #{query}"
 
@@ -78,7 +77,7 @@ Telegram::Bot::Client.run(token) do |bot|
             markup = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: keyboard)
             bot.api.send_message(chat_id: message.chat.id, text: description, parse_mode: "html", reply_markup: markup)
           end
-        elsif text.match?(/\/start(@dizionariorobot)?/)
+      when text.match?(/\/start(@dizionariorobot)?/)
         bot.api.send_message(chat_id: message.chat.id, text: "Ciao, tramite questo bot puoi risalire alla definizione delle parole tratta dal dizionario libero <a href='https://it.wiktionary.org/'>Wikizionario!</a> distribuito sotto la licenza libera <a href='https://creativecommons.org/licenses/by-sa/3.0/deed.it'>CC-BY-SA 3.0</a>. Inseriscilo nella chat che preferisci o usalo qui e usando il comando /cerca e la parola che vuoi cercare. Segnala eventuali errori a @ferdi2005")
       end
   end
