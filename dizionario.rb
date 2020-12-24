@@ -65,7 +65,7 @@ Telegram::Bot::Client.run(token) do |bot|
               end
 
               unless @stop
-                if !s.match?(/=+[\s\w\/\,]+=+/)
+                if !s.match?(/=+[\s\w\/\,]+=+/) && !s.match?(curres["title"])
                   risultati.push("- " + s + ";")
                 elsif s.match?(curres["title"])
                   risultati.push('<i>' + s + '</i>')
@@ -73,7 +73,7 @@ Telegram::Bot::Client.run(token) do |bot|
               end
             end
 
-            risultati.unshift("<b>#{curres["title"]}<b>")
+            risultati.unshift("<b>#{curres["title"]}</b>")
             
 
             description = risultati.join("\n")
@@ -84,7 +84,7 @@ Telegram::Bot::Client.run(token) do |bot|
           end
         end
         elsif text.match?(/\/start(@dizionariorobot)?/)
-        bot.api.send_message(chat_id: message.chat.id, text: "Ciao, tramite questo bot puoi risalire alla definizione delle parole tratta dal dizionario libero <a href='https://it.wiktionary.org/'>Wikizionario!</a> distribuito sotto la licenza libera <a href='https://creativecommons.org/licenses/by-sa/3.0/deed.it'>CC-BY-SA 3.0</a>. Inseriscilo nella chat che preferisci o usalo qui e usando il comando /cerca e la parola che vuoi cercare. Segnala eventuali errori a @ferdi2005")
+        bot.api.send_message(chat_id: message.chat.id, text: "Ciao, tramite questo bot puoi risalire alla definizione delle parole tratta dal dizionario libero <a href='https://it.wiktionary.org/'>Wikizionario!</a> distribuito sotto la licenza libera <a href='https://creativecommons.org/licenses/by-sa/3.0/deed.it'>CC-BY-SA 3.0</a>. Inseriscilo nella chat che preferisci o usalo qui e usando il comando /cerca e la parola che vuoi cercare. Segnala eventuali errori a @ferdi2005", parse_mode: "html")
       end
   end
 end
