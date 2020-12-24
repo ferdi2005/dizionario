@@ -8,25 +8,29 @@
 
 require 'mediawiki_api'
 require 'telegram/bot'
-require 'json'
 
 ## CONFIGURATION START ##
-token = 'INSERT_BOT_TOKEN_HERE' # Telegram bot API token
+token = '401394017:AAFAV8uU8z5S0VhY5S8yGRkjbrn1wuOGalU' # Telegram bot API token
 api_ep = 'https://it.wiktionary.org/w/api.php'# Mediawiki API endpoint
 page_uri = "#{api_ep[0..-10]}wiki/" # Base URL for pages
 ## CONFIGURATION END ##
 
 mw = MediawikiApi::Client.new api_ep
-# bot_id = token.split(':').at(0).to_i
 
 Telegram::Bot::Client.run(token) do |bot|
   bot.listen do |message|
-    case message
-    when Telegram::Bot::Types::InlineQuery
-      puts "Processing inline query -- #{message.query}"
+    puts message.text
+    unless message.text.nil?
+      text = message.text
+    else
+      text = message.caption
+    end
 
-      if !message.query.empty? && message.query.length > 3
-        query = message.query
+    case text
+    when text.match?(/\/cerca(@dizionariorobot)?\s(\w+)/)
+      query = text.match(/\/cerca(@dizionariorobot)?\s(\w+)/)[2]
+      puts "Processing query -- #{query}"
+
         query_search = mw.query(list: "search", srsearch: query + ' hastemplate:"-it-"', srlimit: 5)
         hash_search = []
         query_search.data["search"].each do |result|
@@ -35,15 +39,9 @@ Telegram::Bot::Client.run(token) do |bot|
 
         results = []
         if query_search.data["searchinfo"]["totalhits"] == 0
-          results << Telegram::Bot::Types::InlineQueryResultArticle.new(
-            id: 1,
-            title: "Nessuna parola trovata.",
-            input_message_content: Telegram::Bot::Types::InputTextMessageContent.new(message_text: "Nessun risultato")
-          )
+          bot.api.send_message(chat_id: message.chat.id, text: "Nessun risultato trovato sul Wikizionario!")
         end
-        counter = 1
-
-        hash_search.each do |curres|
+          curres = hash_search.first
           cur_extract = mw.query(prop: "extracts", exchars: 1200, explaintext: "1", exsectionformat: "wiki", exlimit: :max, titles: curres["title"])
           
           hash_extract = cur_extract.data["pages"]
@@ -75,25 +73,12 @@ Telegram::Bot::Client.run(token) do |bot|
             risultati.unshift("<i><b>#{curres["title"]}</b></i>")
 
             description = risultati.join("\n")
-
-            results << Telegram::Bot::Types::InlineQueryResultArticle.new(
-              id: counter,
-              title: curres["title"],
-              input_message_content: Telegram::Bot::Types::InputTextMessageContent.new(message_text: description, parse_mode: "html"),
-              description: "#{description.gsub("<i><b>", "").gsub("</i></b>", "")[0..64]}...",
-              reply_markup: Telegram::Bot::Types::InlineKeyboardMarkup.new(
-                inline_keyboard: [Telegram::Bot::Types::InlineKeyboardButton.new(
-                  text: "Leggi tutte le altre informazioni su #{message.query}", url: "#{page_uri}#{norm_title}"
-                )]
-              )
-            )
-            counter = counter + 1
+            keyboard = Telegram::Bot::Types::InlineKeyboardButton.new(text: "Leggi la voce di dizionario completa su #{curres["title"]}", url: "#{page_uri}#{curres["title"]}")
+            markup = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: keyboard)
+            bot.api.send_message(chat_id: message.chat.id, text: description, parse_mode: "html", reply_markup: markup)
           end
-        end
-        bot.api.answer_inline_query(inline_query_id: message.id, results: results) rescue "Errore nel processare un messaggio"
+      when text.match?(/\/start(@dizionariorobot)?/)
+        bot.api.send_message(chat_id: message.chat.id, text: "Ciao, tramite questo bot puoi risalire alla definizione delle parole tratta dal dizionario libero <a href='https://it.wiktionary.org/'>Wikizionario!</a> distribuito sotto la licenza libera <a href='https://creativecommons.org/licenses/by-sa/3.0/deed.it'>CC-BY-SA 3.0</a>. Inseriscilo nella chat che preferisci o usalo qui e usando il comando /cerca e la parola che vuoi cercare. Segnala eventuali errori a @ferdi2005")
       end
-      when Telegram::Bot::Types::Message
-        bot.api.send_message(chat_id: message.chat.id, text: "Ciao, tramite questo bot puoi risalire alla definizione delle parole tratta dal dizionario libero <a href='https://it.wiktionary.org/'>Wikizionario!</a> distribuito sotto la licenza libera <a href='https://creativecommons.org/licenses/by-sa/3.0/deed.it'>CC-BY-SA 3.0</a>. Puoi usarlo inline in ogni chat semplicemente scrivendo @dizionariorobot e poi la parola da cercare.")
-    end
   end
 end
