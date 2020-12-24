@@ -39,7 +39,7 @@ Telegram::Bot::Client.run(token) do |bot|
         results = []
         if query_search.data["searchinfo"]["totalhits"] == 0
           bot.api.send_message(chat_id: message.chat.id, text: "Nessun risultato trovato sul Wikizionario!")
-        end
+        else
           curres = hash_search.first
           cur_extract = mw.query(prop: "extracts", exchars: 1200, explaintext: "1", exsectionformat: "wiki", exlimit: :max, titles: curres["title"])
           
@@ -76,6 +76,7 @@ Telegram::Bot::Client.run(token) do |bot|
             markup = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: keyboard)
             bot.api.send_message(chat_id: message.chat.id, text: description, parse_mode: "html", reply_markup: markup)
           end
+        end
         elsif text.match?(/\/start(@dizionariorobot)?/)
         bot.api.send_message(chat_id: message.chat.id, text: "Ciao, tramite questo bot puoi risalire alla definizione delle parole tratta dal dizionario libero <a href='https://it.wiktionary.org/'>Wikizionario!</a> distribuito sotto la licenza libera <a href='https://creativecommons.org/licenses/by-sa/3.0/deed.it'>CC-BY-SA 3.0</a>. Inseriscilo nella chat che preferisci o usalo qui e usando il comando /cerca e la parola che vuoi cercare. Segnala eventuali errori a @ferdi2005")
       end
