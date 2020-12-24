@@ -7,6 +7,9 @@ class ProcessController < ApplicationController
     def processing
     begin
         message = params[:message]
+        puts "Message: " + message
+        puts "text: " + text 
+        
         # return if message.nil? || message[:chat].nil? || message[:text].nil?
         unless message[:text].nil? 
           text = message[:text]
@@ -18,8 +21,6 @@ class ProcessController < ApplicationController
         api_ep = 'https://it.wiktionary.org/w/api.php'# Mediawiki API endpoint
         page_uri = "#{api_ep[0..-10]}wiki/" # Base URL for pages
         ## CONFIGURATION END ##
-        puts "Message: " + message
-        puts "text: " + text 
         mw = MediawikiApi::Client.new api_ep
           if text.match?(/\/cerca(@dizionariorobot)?\s(\w+)/i)
             query = text.match(/\/cerca(@dizionariorobot)?\s(\w+)/i)[2]
