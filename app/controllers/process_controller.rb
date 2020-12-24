@@ -1,3 +1,4 @@
+require 'mediawiki_api'
 require 'telegram/bot'
 class ProcessController < ApplicationController
     def home
