@@ -7,7 +7,7 @@ class ProcessController < ApplicationController
     def processing
     begin
         message = params[:message]
-        return if message.nil? || message[:chat].nil? || message[:text].nil?
+        # return if message.nil? || message[:chat].nil? || message[:text].nil?
         unless message[:text].nil? 
           text = message[:text]
         else
