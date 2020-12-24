@@ -55,25 +55,29 @@ Telegram::Bot::Client.run(token) do |bot|
 
             split.each do |s|
               if s.match?(/=+([\s\w\/])+=+/)
-                if ["Sillabazione", "Pronuncia", "Citazione", "Etimologia / Derivazione", "Etimologia / derivazione", "Etimologia", "Derivazione", "Sinonimi", "Contrari", "Parole derivate", "Termini correlati", "Alterati", "Proverbi e modi di dire", "Traduzione", "Note / Riferimenti", "Altri progetti", "Varianti"].include?(s.match(/=+([\s\w\/]+)=+/)[1].strip.capitalize)
+                if ["Sillabazione", "Pronuncia", "Citazione", "Etimologia / Derivazione", "Etimologia / derivazione", "Etimologia", "Derivazione", "Sinonimi", "Contrari", "Parole derivate", "Termini correlati", "Alterati", "Proverbi e modi di dire", "Traduzione", "Note / Riferimenti", "Altri progetti", "Varianti"].include?(s.match(/=+([\s\w\/\,]+)=+/)[1].strip.capitalize)
                   @stop = true
-                elsif !["Italiano", "Transitivo", "Intransitivo"].include?(s.match(/=+([\s\w\/]+)=+/)[1].strip.capitalize)
-                  risultati.push("<b>#{s.match(/=+([\s\w\/]+)=+/)[1].strip.capitalize}:</b>")
-                elsif ["Transitivo", "Intransitivo"].include?(s.match(/=+([\s\w\/]+)=+/)[1].strip.capitalize)
-                  risultati.push("(#{s.match(/=+([\s\w\/]+)=+/)[1].strip.downcase})")
+                elsif !["Italiano", "Transitivo", "Intransitivo"].include?(s.match(/=+([\s\w\/\,]+)=+/)[1].strip.capitalize)
+                  risultati.push("<b>#{s.match(/=+([\s\w\/\,]+)=+/)[1].strip.capitalize}:</b>")
+                elsif ["Transitivo", "Intransitivo"].include?(s.match(/=+([\s\w\/\,]+)=+/)[1].strip.capitalize)
+                  risultati.push("(#{s.match(/=+([\s\w\/\,]+)=+/)[1].strip.downcase})")
                 end
               end
 
               unless @stop
-                unless s.match?(/=+[\s\w\/]+=+/) || s.match?(page["title"])
+                if !s.match?(/=+[\s\w\/\,]+=+/)
                   risultati.push("- " + s + ";")
+                elsif s.match?(curres["title"])
+                  risultati.push('<i>' + s + '</i>')
                 end
               end
             end
 
-            risultati.unshift("<i><b>#{curres["title"]}</b></i>")
+            risultati.unshift("<b>#{curres["title"]}<b>")
+            
 
             description = risultati.join("\n")
+            puts description
             keyboard = Telegram::Bot::Types::InlineKeyboardButton.new(text: "Leggi la voce di dizionario completa su #{curres["title"]}", url: "#{page_uri}#{curres["title"]}")
             markup = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: keyboard)
             bot.api.send_message(chat_id: message.chat.id, text: description, parse_mode: "html", reply_markup: markup)
