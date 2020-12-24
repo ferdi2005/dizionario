@@ -10,7 +10,7 @@ require 'mediawiki_api'
 require 'telegram/bot'
 
 ## CONFIGURATION START ##
-token = '401394017:AAFAV8uU8z5S0VhY5S8yGRkjbrn1wuOGalU' # Telegram bot API token
+token = 'INSERT_TOKEN_HERE' # Telegram bot API token
 api_ep = 'https://it.wiktionary.org/w/api.php'# Mediawiki API endpoint
 page_uri = "#{api_ep[0..-10]}wiki/" # Base URL for pages
 ## CONFIGURATION END ##

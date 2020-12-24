@@ -1,5 +1,8 @@
 require 'telegram/bot'
 class ProcessController < ApplicationController
+    def home
+        @count = Message.where(completed: true).count
+    end
     def process
         token = ENV['TOKEN']
         api_ep = 'https://it.wiktionary.org/w/api.php'# Mediawiki API endpoint
@@ -29,6 +32,7 @@ class ProcessController < ApplicationController
               results = []
               if query_search.data["searchinfo"]["totalhits"] == 0
                 bot.api.send_message(chat_id: message[:chat][:id], text: "Nessun risultato trovato sul Wikizionario!")
+                @message.update(completed: false)
               end
                 curres = hash_search.first
                 cur_extract = mw.query(prop: "extracts", exchars: 1200, explaintext: "1", exsectionformat: "wiki", exlimit: :max, titles: curres["title"])
@@ -64,6 +68,7 @@ class ProcessController < ApplicationController
                   description = risultati.join("\n")
                   keyboard = Telegram::Bot::Types::InlineKeyboardButton.new(text: "Leggi la voce di dizionario completa su #{curres["title"]}", url: "#{page_uri}#{curres["title"]}")
                   markup = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: keyboard)
+                  @message.update(completed: true)
                   bot.api.send_message(chat_id: message[:chat][:id], text: description, parse_mode: "html", reply_markup: markup)
                 end
             when text.match?(/\/start(@dizionariorobot)?/)
