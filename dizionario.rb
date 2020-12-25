@@ -67,7 +67,7 @@ Telegram::Bot::Client.run(token) do |bot|
             split.reject! { |r| r == ""}
             stop = false
             split.each do |s|
-              if s.match?(/=+([\s\w\/])+=+/)
+              if s.match?(/=+([\s\w\/\,]+)=+/)
                 if ["Sillabazione", "Pronuncia", "Citazione", "Etimologia / Derivazione", "Etimologia / derivazione", "Etimologia", "Derivazione", "Sinonimi", "Contrari", "Parole derivate", "Termini correlati", "Alterati", "Proverbi e modi di dire", "Traduzione", "Note / Riferimenti", "Altri progetti", "Varianti"].include?(s.match(/=+([\s\w\/\,]+)=+/)[1].strip.capitalize)
                   stop = true
                 elsif lingue.include?(s.match(/=+([\s\w\/\,]+)=+/)[1].strip.downcase)
@@ -82,7 +82,7 @@ Telegram::Bot::Client.run(token) do |bot|
               unless stop
                 if !s.match?(/=+[\s\w\/\,]+=+/) && !s.match?(curres["title"])
                   risultati.push("- " + s + ";")
-                elsif s.match?(curres["title"])
+                elsif s.match?(/\b#{curres["title"]}\b/)
                   risultati.push('<i>' + s + '</i>')
                 end
               end
