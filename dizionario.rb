@@ -33,73 +33,77 @@ mw = MediawikiApi::Client.new api_ep
 
 Telegram::Bot::Client.run(token) do |bot|
   bot.listen do |message|
-    puts message.text
-    unless message.text.nil?
-      text = message.text
-    else
-      text = message.caption
-    end
-  
-    next if text.nil?
+    begin
+      puts message.text
+      unless message.text.nil?
+        text = message.text
+      else
+        text = message.caption
+      end
+    
+      next if text.nil?
 
-    if text.match?(/\/cerca(@dizionariorobot)?\s(\w+)/)
-      query = text.match(/\/cerca(@dizionariorobot)?\s(\w+)/)[2]
-      puts "Processing query -- #{query}"
+      if text.match?(/\/cerca(@dizionariorobot)?\s(\w+)/)
+        query = text.match(/\/cerca(@dizionariorobot)?\s(\w+)/)[2]
+        puts "Processing query -- #{query}"
 
-        query_search = mw.query(list: "search", srsearch: query + ' hastemplate:"-it-"', srlimit: 5)
-        hash_search = []
-        query_search.data["search"].each do |result|
-          hash_search << result
-        end
-
-        if query_search.data["searchinfo"]["totalhits"] == 0
-          bot.api.send_message(chat_id: message.chat.id, text: "Nessun risultato trovato sul Wikizionario!", reply_to_message_id: message.message_id)
-        else
-          curres = hash_search.first
-          cur_extract = mw.query(prop: "extracts", exchars: 1200, explaintext: "1", exsectionformat: "wiki", exlimit: :max, titles: curres["title"])
-          
-          hash_extract = cur_extract.data["pages"]
-          hash_extract.each do |_id, page|
-            norm_title = curres["title"].tr(" ", "_")
-            split = page["extract"].split("\n")
-            risultati = []
-
-            split.reject! { |r| r == ""}
-            stop = false
-            split.each do |s|
-              if s.match?(/=+([\s\w\/\,]+)=+/)
-                if ["Sillabazione", "Pronuncia", "Citazione", "Etimologia / Derivazione", "Etimologia / derivazione", "Etimologia", "Derivazione", "Sinonimi", "Contrari", "Parole derivate", "Termini correlati", "Alterati", "Proverbi e modi di dire", "Traduzione", "Note / Riferimenti", "Altri progetti", "Varianti"].include?(s.match(/=+([\s\w\/\,]+)=+/)[1].strip.capitalize)
-                  stop = true
-                elsif lingue.include?(s.match(/=+([\s\w\/\,]+)=+/)[1].strip.downcase)
-                  stop = true
-                elsif !["Italiano", "Transitivo", "Intransitivo"].include?(s.match(/=+([\s\w\/\,]+)=+/)[1].strip.capitalize)
-                  risultati.push("<b>#{s.match(/=+([\s\w\/\,]+)=+/)[1].strip.capitalize}:</b>")
-                elsif ["Transitivo", "Intransitivo"].include?(s.match(/=+([\s\w\/\,]+)=+/)[1].strip.capitalize)
-                  risultati.push("(#{s.match(/=+([\s\w\/\,]+)=+/)[1].strip.downcase})")
-                end
-              end
-
-              unless stop
-                if !s.match?(/=+[\s\w\/\,]+=+/) && !s.match?(curres["title"])
-                  risultati.push("- " + s + ";")
-                elsif s.match?(/\b#{curres["title"]}\b/)
-                  risultati.push('<i>' + s + '</i>')
-                end
-              end
-            end
-
-            risultati.unshift("<b>#{curres["title"]}</b>")
-            
-
-            description = risultati.join("\n")
-            puts description
-            keyboard = Telegram::Bot::Types::InlineKeyboardButton.new(text: "Leggi la voce di dizionario completa su #{curres["title"]}", url: "#{page_uri}#{norm_title}")
-            markup = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: keyboard)
-            bot.api.send_message(chat_id: message.chat.id, text: description, parse_mode: "html", reply_markup: markup, reply_to_message_id: message.message_id)
+          query_search = mw.query(list: "search", srsearch: query + ' hastemplate:"-it-"', srlimit: 5)
+          hash_search = []
+          query_search.data["search"].each do |result|
+            hash_search << result
           end
-        end
-    elsif text.match?(/\/start(@dizionariorobot)?/)
-      bot.api.send_message(chat_id: message.chat.id, text: "Ciao, tramite questo bot puoi risalire alla definizione delle parole tratta dal dizionario libero <a href='https://it.wiktionary.org/'>Wikizionario!</a> distribuito sotto la licenza libera <a href='https://creativecommons.org/licenses/by-sa/3.0/deed.it'>CC-BY-SA 3.0</a>. Inseriscilo nella chat che preferisci o usalo qui e usando il comando /cerca e la parola che vuoi cercare. Segnala eventuali errori a @ferdi2005", parse_mode: "html")
+
+          if query_search.data["searchinfo"]["totalhits"] == 0
+            bot.api.send_message(chat_id: message.chat.id, text: "Nessun risultato trovato sul Wikizionario!", reply_to_message_id: message.message_id)
+          else
+            curres = hash_search.first
+            cur_extract = mw.query(prop: "extracts", exchars: 1200, explaintext: "1", exsectionformat: "wiki", exlimit: :max, titles: curres["title"])
+            
+            hash_extract = cur_extract.data["pages"]
+            hash_extract.each do |_id, page|
+              norm_title = curres["title"].tr(" ", "_")
+              split = page["extract"].split("\n")
+              risultati = []
+
+              split.reject! { |r| r == ""}
+              stop = false
+              split.each do |s|
+                if s.match?(/=+([\s\w\/\,]+)=+/)
+                  if ["Sillabazione", "Pronuncia", "Citazione", "Etimologia / Derivazione", "Etimologia / derivazione", "Etimologia", "Derivazione", "Sinonimi", "Contrari", "Parole derivate", "Termini correlati", "Alterati", "Proverbi e modi di dire", "Traduzione", "Note / Riferimenti", "Altri progetti", "Varianti"].include?(s.match(/=+([\s\w\/\,]+)=+/)[1].strip.capitalize)
+                    stop = true
+                  elsif lingue.include?(s.match(/=+([\s\w\/\,]+)=+/)[1].strip.downcase)
+                    stop = true
+                  elsif !["Italiano", "Transitivo", "Intransitivo"].include?(s.match(/=+([\s\w\/\,]+)=+/)[1].strip.capitalize)
+                    risultati.push("<b>#{s.match(/=+([\s\w\/\,]+)=+/)[1].strip.capitalize}:</b>")
+                  elsif ["Transitivo", "Intransitivo"].include?(s.match(/=+([\s\w\/\,]+)=+/)[1].strip.capitalize)
+                    risultati.push("(#{s.match(/=+([\s\w\/\,]+)=+/)[1].strip.downcase})")
+                  end
+                end
+
+                unless stop
+                  if !s.match?(/=+[\s\w\/\,]+=+/) && !s.match?(curres["title"])
+                    risultati.push("- " + s + ";")
+                  elsif s.match?(/\b#{curres["title"]}\b/)
+                    risultati.push('<i>' + s + '</i>')
+                  end
+                end
+              end
+
+              risultati.unshift("<b>#{curres["title"]}</b>")
+              
+
+              description = risultati.join("\n")
+              puts description
+              keyboard = Telegram::Bot::Types::InlineKeyboardButton.new(text: "Leggi la voce di dizionario completa su #{curres["title"]}", url: "#{page_uri}#{norm_title}")
+              markup = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: keyboard)
+              bot.api.send_message(chat_id: message.chat.id, text: description, parse_mode: "html", reply_markup: markup, reply_to_message_id: message.message_id)
+            end
+          end
+      elsif text.match?(/\/start(@dizionariorobot)?/)
+        bot.api.send_message(chat_id: message.chat.id, text: "Ciao, tramite questo bot puoi risalire alla definizione delle parole tratta dal dizionario libero <a href='https://it.wiktionary.org/'>Wikizionario!</a> distribuito sotto la licenza libera <a href='https://creativecommons.org/licenses/by-sa/3.0/deed.it'>CC-BY-SA 3.0</a>. Inseriscilo nella chat che preferisci o usalo qui e usando il comando /cerca e la parola che vuoi cercare. Segnala eventuali errori a @ferdi2005", parse_mode: "html")
+      end
+    rescue => e
+      bot.api.send_message(chat_id: 82247861, text: "Chat: #{message.chat.username} (#{message.chat.id}) \n Errore di Telegram: #{e}") rescue puts "Errore invio messaggio segnalazione errore"
     end
   end
 end
