@@ -69,7 +69,7 @@ Telegram::Bot::Client.run(token) do |bot|
             stop = false
             split.each do |s|
               if s.match?(/=+([\s\w\/\,]+)=+/)
-                if ["Sillabazione", "Pronuncia", "Citazione", "Uso / Precisazioni", "Uso / precisazioni" "Etimologia / Derivazione", "Etimologia / derivazione", "Etimologia", "Derivazione", "Sinonimi", "Contrari", "Parole derivate", "Termini correlati", "Alterati", "Proverbi e modi di dire", "Traduzione", "Note / Riferimenti", "Altri progetti", "Varianti"].include?(s.match(/=+([\s\w\/\,]+)=+/)[1].strip.capitalize)
+                if ["Sillabazione", "Pronuncia", "Citazione", "Uso / Precisazioni", "Uso / precisazioni", "Etimologia / Derivazione", "Etimologia / derivazione", "Etimologia", "Derivazione", "Sinonimi", "Contrari", "Parole derivate", "Termini correlati", "Alterati", "Proverbi e modi di dire", "Traduzione", "Note / Riferimenti", "Altri progetti", "Varianti"].include?(s.match(/=+([\s\w\/\,]+)=+/)[1].strip.capitalize)
                   stop = true
                 elsif lingue.include?(s.match(/=+([\s\w\/\,]+)=+/)[1].strip.downcase)
                   stop = true
@@ -78,6 +78,7 @@ Telegram::Bot::Client.run(token) do |bot|
                 elsif ["Transitivo", "Intransitivo"].include?(s.match(/=+([\s\w\/\,]+)=+/)[1].strip.capitalize)
                   risultati.push("(#{s.match(/=+([\s\w\/\,]+)=+/)[1].strip.downcase})")
                 end
+              end
 
                 unless stop
                   if !s.match?(/=+[\s\w\/\,]+=+/) && !s.match?(curres["title"])
@@ -86,10 +87,9 @@ Telegram::Bot::Client.run(token) do |bot|
                     risultati.push('<i>' + s + '</i>')
                   end
                 end
-              end
+            end
 
               risultati.unshift("<b>#{curres["title"]}</b>")
-              
 
               description = risultati.join("\n")
               puts description
