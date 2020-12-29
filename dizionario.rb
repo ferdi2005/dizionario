@@ -65,19 +65,18 @@ Telegram::Bot::Client.run(token) do |bot|
               split = page["extract"].split("\n")
               risultati = []
 
-              split.reject! { |r| r == ""}
-              stop = false
-              split.each do |s|
-                if s.match?(/=+([\s\w\/\,]+)=+/)
-                  if ["Sillabazione", "Pronuncia", "Citazione", "Etimologia / Derivazione", "Etimologia / derivazione", "Etimologia", "Derivazione", "Sinonimi", "Contrari", "Parole derivate", "Termini correlati", "Alterati", "Proverbi e modi di dire", "Traduzione", "Note / Riferimenti", "Altri progetti", "Varianti"].include?(s.match(/=+([\s\w\/\,]+)=+/)[1].strip.capitalize)
-                    stop = true
-                  elsif lingue.include?(s.match(/=+([\s\w\/\,]+)=+/)[1].strip.downcase)
-                    stop = true
-                  elsif !["Italiano", "Transitivo", "Intransitivo"].include?(s.match(/=+([\s\w\/\,]+)=+/)[1].strip.capitalize)
-                    risultati.push("<b>#{s.match(/=+([\s\w\/\,]+)=+/)[1].strip.capitalize}:</b>")
-                  elsif ["Transitivo", "Intransitivo"].include?(s.match(/=+([\s\w\/\,]+)=+/)[1].strip.capitalize)
-                    risultati.push("(#{s.match(/=+([\s\w\/\,]+)=+/)[1].strip.downcase})")
-                  end
+            split.reject! { |r| r == ""}
+            stop = false
+            split.each do |s|
+              if s.match?(/=+([\s\w\/\,]+)=+/)
+                if ["Sillabazione", "Pronuncia", "Citazione", "Uso / Precisazioni", "Uso / precisazioni" "Etimologia / Derivazione", "Etimologia / derivazione", "Etimologia", "Derivazione", "Sinonimi", "Contrari", "Parole derivate", "Termini correlati", "Alterati", "Proverbi e modi di dire", "Traduzione", "Note / Riferimenti", "Altri progetti", "Varianti"].include?(s.match(/=+([\s\w\/\,]+)=+/)[1].strip.capitalize)
+                  stop = true
+                elsif lingue.include?(s.match(/=+([\s\w\/\,]+)=+/)[1].strip.downcase)
+                  stop = true
+                elsif !["Italiano", "Transitivo", "Intransitivo"].include?(s.match(/=+([\s\w\/\,]+)=+/)[1].strip.capitalize) && stop != true
+                  risultati.push("<b>#{s.match(/=+([\s\w\/\,]+)=+/)[1].strip.capitalize}:</b>")
+                elsif ["Transitivo", "Intransitivo"].include?(s.match(/=+([\s\w\/\,]+)=+/)[1].strip.capitalize)
+                  risultati.push("(#{s.match(/=+([\s\w\/\,]+)=+/)[1].strip.downcase})")
                 end
 
                 unless stop
