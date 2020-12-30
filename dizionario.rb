@@ -77,6 +77,8 @@ Telegram::Bot::Client.run(token) do |bot|
                   risultati.push("<b>#{s.match(/=+([\s\w\/\,]+)=+/)[1].strip.capitalize}:</b>")
                 elsif ["Transitivo", "Intransitivo"].include?(s.match(/=+([\s\w\/\,]+)=+/)[1].strip.capitalize)
                   risultati.push("(#{s.match(/=+([\s\w\/\,]+)=+/)[1].strip.downcase})")
+                elsif s.match(/=+([\s\w\/\,]+)=+/)[1].strip.capitalize == "Italiano"
+                  stop = false
                 end
               end
 
