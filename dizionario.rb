@@ -114,7 +114,7 @@ Telegram::Bot::Client.run(token) do |bot|
               end
             end
         elsif text.match?(/\/start(@dizionariorobot)?/)
-          bot.api.send_message(chat_id: message.chat.id, text: "Ciao, tramite questo bot puoi risalire alla definizione delle parole tratta dal dizionario libero <a href='https://it.wiktionary.org/'>Wikizionario!</a> distribuito sotto la licenza libera <a href='https://creativecommons.org/licenses/by-sa/3.0/deed.it'>CC-BY-SA 3.0</a>. Inseriscilo nella chat che preferisci o usalo qui e usando il comando /cerca e la parola che vuoi cercare. Segnala eventuali errori a @ferdi2005", parse_mode: "html")
+          bot.api.send_message(chat_id: message.chat.id, text: "Ciao, tramite questo bot puoi risalire alla definizione delle parole tratta dal dizionario libero <a href='https://it.wiktionary.org/'>Wikizionario!</a> distribuito sotto la licenza libera <a href='https://creativecommons.org/licenses/by-sa/3.0/deed.it'>CC-BY-SA 3.0</a>. Inseriscilo nella chat che preferisci o usalo qui e usando il comando /cerca e la parola che vuoi cercare. Puoi anche usarlo in modalità inline scrivendo @dizionariobot e la parola che vuoi cercare in qualsiasi chat! Segnala eventuali errori a @ferdi2005", parse_mode: "html")
         end
       rescue => e
         bot.api.send_message(chat_id: 82247861, text: "Chat: #{message.chat.username} (#{message.chat.id}) \n Errore di Telegram: #{e}") rescue puts "Errore invio messaggio segnalazione errore: #{e}"
