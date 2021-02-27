@@ -34,7 +34,6 @@ mw = MediawikiApi::Client.new api_ep
 Telegram::Bot::Client.run(token) do |bot|
   bot.listen do |message|
     begin
-      puts message.text
       unless message.text.nil?
         text = message.text
       else
