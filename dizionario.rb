@@ -112,7 +112,7 @@ Telegram::Bot::Client.run(token) do |bot|
                 markup = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: keyboard)
                 bot.api.send_message(chat_id: message.chat.id, text: description, parse_mode: "html", reply_markup: markup, reply_to_message_id: message.message_id)
               end
-            end
+           end
         elsif text.match?(/\/start(@dizionariorobot)?/)
           bot.api.send_message(chat_id: message.chat.id, text: "Ciao, tramite questo bot puoi risalire alla definizione delle parole tratta dal dizionario libero <a href='https://it.wiktionary.org/'>Wikizionario!</a> distribuito sotto la licenza libera <a href='https://creativecommons.org/licenses/by-sa/3.0/deed.it'>CC-BY-SA 3.0</a>. Inseriscilo nella chat che preferisci o usalo qui e usando il comando /cerca e la parola che vuoi cercare. Puoi anche usarlo in modalità inline scrivendo @dizionariobot e la parola che vuoi cercare in qualsiasi chat! Segnala eventuali errori a @ferdi2005", parse_mode: "html")
         end
@@ -123,7 +123,6 @@ Telegram::Bot::Client.run(token) do |bot|
       puts "Processing inline query -- #{message.query}"
       begin
         if !message.query.empty?
-          results = []
           query = message.query
           search = search(query)
           if search == nil
@@ -133,6 +132,7 @@ Telegram::Bot::Client.run(token) do |bot|
               input_message_content: Telegram::Bot::Types::InputTextMessageContent.new(message_text: "Nessun risultato")
             )
           else
+            results = []
             c = 0
             search.each do |curres|
               c += 1
@@ -152,13 +152,13 @@ Telegram::Bot::Client.run(token) do |bot|
                   )
                 )  
               end
-              bot.api.answer_inline_query(inline_query_id: message.id, results: results)
-          rescue => e
-            bot.api.send_message(chat_id: 82247861, text: "Chat: #{message.chat.username} (#{message.chat.id}) \n Errore di Telegram: #{e}") rescue puts "Errore invio messaggio segnalazione errore: #{e}"
+            end
+            bot.api.answer_inline_query(inline_query_id: message.id, results: results)
           end
-          end
+        end
+       rescue => e
+          bot.api.send_message(chat_id: 82247861, text: "Chat: #{message.chat.username} (#{message.chat.id}) \n Errore di Telegram: #{e}") rescue puts "Errore invio messaggio segnalazione errore: #{e}"
         end
       end
     end
   end
-end
