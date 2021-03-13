@@ -7,6 +7,15 @@ Trovi una guida per l'installazione [in questa pagina](installazione.md).
 Basta aggiungere il bot ad un gruppo ad un gruppo o avviarlo in privato scrivendo [@dizionariorobot](https://t.me/dizionariorobot) e poi usare il comando `/cerca`, seguito da uno spazio e poi il lemma che si desidera cercare.
 ## Perché questo bot, perché Wikizionario?
 Attualmente, su Telegram non c'è alcun bot che funga da dizionario della Lingua Italiana, Wikizionario è un dizionario libero, sempre in costante crescita e facilmente riutilizzabile tramite delle API. È possibile contribuire su [it.wiktionary.org](https://it.wiktionary.org/wiki/Pagina_principale)
+
+## Status
+È possibile creare uno script per verificare la corretta esecuzione del bot. Esempio:
+```
+status = `/usr/bin/ruby /home/pi/Script/dizionario/daemon.rb status`
+if !status.include?("dizionario.rb: running")
+    `/usr/bin/ruby /home/pi/Script/dizionario/daemon.rb start`
+end
+```
 ## Copyright
 Basato su [questo bot](https://github.com/LucentW/wikigram-tg) di LucentW e pesantemente modificato.
 ## Voglio contribuire, aiutare, segnalare...
