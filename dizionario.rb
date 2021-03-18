@@ -102,6 +102,7 @@ def process(extract, title)
   return risultati
 end
 
+begin
 Telegram::Bot::Client.run(token) do |bot|
   bot.listen do |message|
       case message
@@ -186,3 +187,6 @@ Telegram::Bot::Client.run(token) do |bot|
       end
     end
   end
+rescue => e
+  puts e
+end
