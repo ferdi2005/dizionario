@@ -22,7 +22,7 @@
 require 'mediawiki_api'
 require 'telegram/bot'
 
-
+begin
 if !File.exist? "#{__dir__}/.config"
   puts 'Inserisci il token del bot:'
   print '> '
@@ -102,7 +102,6 @@ def process(extract, title)
   return risultati
 end
 
-begin
 Telegram::Bot::Client.run(token) do |bot|
   bot.listen do |message|
       case message
@@ -189,4 +188,5 @@ Telegram::Bot::Client.run(token) do |bot|
   end
 rescue => e
   puts e
+  retry
 end
